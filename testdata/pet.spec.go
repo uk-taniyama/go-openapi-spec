@@ -2,6 +2,21 @@
 
 package api
 
+/*
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+  description: A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Swagger API Team
+    email: apiteam@swagger.io
+    url: http://swagger.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+*/
+
 type Error struct {
 	Code    int32
 	Message string
@@ -24,7 +39,7 @@ type FindPetsParams struct {
 
 type Interface interface {
 	// (GET /pets)
-	FindPets(params *FindPetsParams) []Pet
+	FindPets(params FindPetsParams) []Pet
 
 	// (POST /pets)
 	AddPet(body Pet) Pet
@@ -32,6 +47,6 @@ type Interface interface {
 	// (DELETE /pets/{id})
 	DeletePet(id int64)
 
-	// (GET /pets)
+	// (GET /pets/{id})
 	FindPetById(id int64) []Pet
 }

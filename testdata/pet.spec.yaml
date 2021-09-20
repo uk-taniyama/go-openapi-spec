@@ -1,0 +1,117 @@
+components:
+  schemas:
+    NewPet:
+      type: object
+      properties:
+        Tag:
+          type: string
+        Name:
+          type: string
+    Error:
+      type: object
+      properties:
+        Code:
+          type: integer
+        Message:
+          type: string
+    FindPetsParams:
+      type: object
+      properties:
+        Limit:
+          type: integer
+        Tags:
+          items:
+            type: string
+          type: array
+    Pet:
+      allOf:
+      - $ref: '#/components/schemas/NewPet'
+      - type: object
+        properties:
+          Id:
+            type: integer
+openapi: 3.0.0
+info: null
+paths:
+  /pets:
+    post:
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+      operationId: AddPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+    get:
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Pet'
+                type: array
+      parameters:
+      - schema:
+          items:
+            type: string
+          type: array
+        in: query
+        name: Tags
+      - schema:
+          type: integer
+        in: query
+        name: Limit
+      operationId: FindPets
+  /pets/{id}:
+    get:
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Pet'
+                type: array
+      parameters:
+      - required: true
+        schema:
+          type: integer
+        in: path
+        name: id
+      operationId: FindPetById
+    delete:
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+      - required: true
+        schema:
+          type: integer
+        in: path
+        name: id
+      operationId: DeletePet
