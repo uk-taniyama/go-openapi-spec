@@ -1,0 +1,209 @@
+{
+  "openapi": "3.0.0",
+  "components": {
+    "schemas": {
+      "Error": {
+        "properties": {
+          "Code": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Message": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "FindPetsParams": {
+        "properties": {
+          "Limit": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "NewPet": {
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Tag": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Pet": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NewPet"
+          },
+          {
+            "properties": {
+              "Id": {
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      }
+    }
+  },
+  "info": null,
+  "paths": {
+    "/pets": {
+      "get": {
+        "operationId": "FindPets",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "Tags",
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          {
+            "in": "query",
+            "name": "Limit",
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Pet"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "AddPet",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pets/{id}": {
+      "delete": {
+        "operationId": "DeletePet",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "FindPetById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Pet"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
