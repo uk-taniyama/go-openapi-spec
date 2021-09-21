@@ -2,7 +2,7 @@
 
 package api
 
-/*
+const OpenAPISpec = `
 info:
   version: 1.0.0
   title: Swagger Petstore
@@ -15,7 +15,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-*/
+`
 
 type Error struct {
 	Code    int32
@@ -23,8 +23,8 @@ type Error struct {
 }
 
 type NewPet struct {
-	Name string
-	Tag  string
+	Name string `{min:10,max:10}`
+	Tag  string `{min:10,max:20,format:"[a-z][A-Z]"}`
 }
 
 type Pet struct {

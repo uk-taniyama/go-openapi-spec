@@ -1,117 +1,161 @@
 components:
   schemas:
-    NewPet:
-      type: object
-      properties:
-        Tag:
-          type: string
-        Name:
-          type: string
     Error:
-      type: object
       properties:
         Code:
+          format: int32
           type: integer
         Message:
+          format: '[a-z][A-Z]'
+          maxLength: 20
+          minLength: 10
           type: string
-    FindPetsParams:
+      required:
+      - Code
+      - Message
       type: object
+    FindPetsParams:
       properties:
         Limit:
+          format: int32
           type: integer
         Tags:
           items:
+            format: '[a-z][A-Z]'
+            maxLength: 20
+            minLength: 10
             type: string
           type: array
+      required:
+      - Tags
+      - Limit
+      type: object
+    NewPet:
+      properties:
+        Name:
+          format: '[a-z][A-Z]'
+          maxLength: 20
+          minLength: 10
+          type: string
+        Tag:
+          format: '[a-z][A-Z]'
+          maxLength: 20
+          minLength: 10
+          type: string
+      required:
+      - Name
+      - Tag
+      type: object
     Pet:
       allOf:
       - $ref: '#/components/schemas/NewPet'
-      - type: object
-        properties:
+      - properties:
           Id:
+            format: int64
             type: integer
+        required:
+        - Id
+        type: object
+info:
+  contact:
+    email: apiteam@swagger.io
+    name: Swagger API Team
+    url: http://swagger.io
+  description: A sample API that uses a petstore as an example to demonstrate features
+    in the OpenAPI 3.0 specification
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Petstore
+  version: 1.0.0
 openapi: 3.0.0
-info: null
 paths:
   /pets:
-    post:
+    get:
+      operationId: FindPets
+      parameters:
+      - in: query
+        name: Tags
+        schema:
+          items:
+            format: '[a-z][A-Z]'
+            maxLength: 20
+            minLength: 10
+            type: string
+          type: array
+      - in: query
+        name: Limit
+        schema:
+          format: int32
+          type: integer
       responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Pet'
+                type: array
         default:
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Pet'
+    post:
       operationId: AddPet
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Pet'
-    get:
+        required: true
       responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
         default:
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '200':
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/Pet'
-                type: array
-      parameters:
-      - schema:
-          items:
-            type: string
-          type: array
-        in: query
-        name: Tags
-      - schema:
-          type: integer
-        in: query
-        name: Limit
-      operationId: FindPets
   /pets/{id}:
-    get:
+    delete:
+      operationId: DeletePet
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
       responses:
         default:
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '200':
+    get:
+      operationId: FindPetById
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
           content:
             application/json:
               schema:
                 items:
                   $ref: '#/components/schemas/Pet'
                 type: array
-      parameters:
-      - required: true
-        schema:
-          type: integer
-        in: path
-        name: id
-      operationId: FindPetById
-    delete:
-      responses:
         default:
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      parameters:
-      - required: true
-        schema:
-          type: integer
-        in: path
-        name: id
-      operationId: DeletePet

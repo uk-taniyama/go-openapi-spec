@@ -23,9 +23,11 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -62,7 +64,7 @@ func ref(val *openapi3.Schema) *openapi3.SchemaRef {
 type Generator struct {
 	config *Config
 	fset   *token.FileSet
-	spec   openapi3.T
+	spec   *openapi3.T
 }
 
 func New(config *Config) (*Generator, error) {
@@ -77,6 +79,7 @@ func New(config *Config) (*Generator, error) {
 	return &Generator{
 		config: config,
 		fset:   token.NewFileSet(),
+		spec:   &openapi3.T{},
 	}, nil
 }
 
@@ -101,6 +104,10 @@ func (g *Generator) Run() error {
 	if err != nil {
 		return errors.Wrap(err, "json.Marshal")
 	}
+	bytes, err = yaml.JSONToYAML(bytes)
+	if err != nil {
+		return errors.Wrap(err, "yaml.JSONToYAML")
+	}
 	_, err = w.Write(bytes)
 	if err != nil {
 		return errors.Wrap(err, "w.Write")
@@ -119,18 +126,48 @@ func (g *Generator) generate(af *ast.File) {
 			continue
 		}
 		for _, s := range gd.Specs {
-			ts, ok := s.(*ast.TypeSpec)
-			if !ok {
-				continue
+			vs, ok := s.(*ast.ValueSpec)
+			if ok {
+				g.importSpec(vs)
 			}
-			switch i := ts.Type.(type) {
-			case *ast.StructType:
-				g.generateComponent(ts, i)
-			case *ast.InterfaceType:
-				g.generatePaths(ts, i)
+			ts, ok := s.(*ast.TypeSpec)
+			if ok {
+				switch i := ts.Type.(type) {
+				case *ast.StructType:
+					g.generateComponent(ts, i)
+				case *ast.InterfaceType:
+					g.generatePaths(ts, i)
+				}
 			}
 		}
 	}
+}
+
+func (g *Generator) importSpec(vs *ast.ValueSpec) {
+	if vs.Names == nil || vs.Names[0].Name != "OpenAPISpec" {
+		return
+	}
+	if vs.Values == nil || len(vs.Values) != 1 {
+		log.Panic("Invalid OpenAPISpec", vs.Values)
+	}
+	bl, ok := vs.Values[0].(*ast.BasicLit)
+	if !ok {
+		log.Panic("Invalid OpenAPISpec", vs.Values)
+	}
+	spec, err := strconv.Unquote(bl.Value)
+	if err != nil {
+		log.Panic("Invalid OpenAPISpec", vs.Values)
+	}
+	t, err := openapi3.NewLoader().LoadFromData([]byte(spec))
+	if err != nil {
+		log.Panic("Invalid OpenAPISpec", spec)
+	}
+
+	t.OpenAPI = g.spec.OpenAPI
+	t.Components = g.spec.Components
+	t.Paths = g.spec.Paths
+
+	g.spec = t
 }
 
 func (g *Generator) generateComponent(ts *ast.TypeSpec, s *ast.StructType) {
@@ -159,7 +196,15 @@ func (g *Generator) fromStruct(s *ast.StructType) *openapi3.SchemaRef {
 			parentRef = "#/components/schemas/" + i.Name
 		} else {
 			name := f.Names[0].Name
-			properties[name] = fromType(f.Type)
+			prop := fromType(f.Type)
+			required = append(required, name)
+			if f.Tag != nil {
+				tag, err := strconv.Unquote(f.Tag.Value)
+				if err == nil {
+					setSchemaFromTag(prop, tag)
+				}
+			}
+			properties[name] = prop
 		}
 	}
 
@@ -179,6 +224,17 @@ func (g *Generator) fromStruct(s *ast.StructType) *openapi3.SchemaRef {
 			{Value: schema},
 		},
 	})
+}
+
+func setSchemaFromTag(ref *openapi3.SchemaRef, tag string) {
+	if ref == nil || ref.Value == nil {
+		return
+	}
+	kv := ParseTag(tag)
+	if len(kv) == 0 {
+		return
+	}
+	ExpandTagForScheme(ref.Value, kv)
 }
 
 func fromType(expr ast.Expr) *openapi3.SchemaRef {
