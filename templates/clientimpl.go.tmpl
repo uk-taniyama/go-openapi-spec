@@ -1,0 +1,95 @@
+package {{package}}
+
+import (
+	"context"
+	"fmt"
+	"net/http"
+)
+
+type ClientHelper struct {
+	Client      ClientWithResponsesInterface
+	HandleError func(funcName string, res *http.Response, body []byte, err *Error) error
+}
+
+func NewClientHelper(server string, opts ...ClientOption) (*ClientHelper, error) {
+	h := &ClientHelper{
+		HandleError: DefaultHandleError,
+	}
+	c, err := NewClientWithResponses(server, opts...)
+	h.Client = c
+	return h, err
+}
+
+type response interface {
+	StatusCode() int
+	Status() string
+}
+
+type ClientHelperError struct {
+	FuncName   string
+	StatusCode int
+	Status     string
+	Body       []byte
+	JSON       *Error
+}
+
+func (e *ClientHelperError) Error() string {
+	return fmt.Sprintf("ClientHelperError:%v:%v:%v", e.FuncName, e.StatusCode, e.Status)
+}
+
+// DefaultHandleError is default HandleError for ClientHelper
+func DefaultHandleError(funcName string, res *http.Response, body []byte, err *Error) error {
+	return &ClientHelperError{
+		FuncName:   funcName,
+		StatusCode: res.StatusCode,
+		Status:     res.Status,
+		Body:       body,
+		JSON:       err,
+	}
+}
+
+{{range . -}}
+{{- $type200 := "" -}}
+{{- range getResponseTypeDefinitions .}}
+	{{- if eq .TypeName "JSON200" -}}
+	    {{- $type200 = .Schema.TypeDecl -}}
+    {{- end -}}
+{{- end -}}
+{{$hasParams := .RequiresParamObject -}}
+{{$pathParams := .PathParams -}}
+{{$opid := .OperationId -}}
+    {{if .HasBody}}
+        {{range .Bodies}}
+func (h* ClientHelper){{$opid}}{{.Suffix}}({{- _ -}}
+    ctx context.Context{{genParamArgs $pathParams}},{{- _ -}}
+    {{if $hasParams}}params *{{$opid}}Params,{{end}}{{- _ -}}
+    body {{$opid}}{{.NameTag}}RequestBody,{{- _ -}}
+    reqEditors... RequestEditorFn,{{- _ -}}
+    ) ({{if $type200}}*{{$type200}},{{end}} error) {
+	res, err := h.Client.{{$opid}}{{.Suffix}}WithResponse(ctx{{genParamNames $pathParams}},{{if $hasParams}}params,{{end}}body, reqEditors...)
+	if err != nil {
+		return {{if $type200}}nil,{{end}} err
+	}
+	if res.JSONDefault != nil {
+		return {{if $type200}}nil,{{end}} h.HandleError("{{$opid}}", res.HTTPResponse, res.Body, res.JSONDefault)
+	}
+	return {{if $type200}}res.JSON200,{{end}}nil
+}
+        {{end}}{{/* range .Bodies */}}
+    {{else}}{{/* not .HasBody*/}}
+func (h* ClientHelper){{$opid}}({{- _ -}}
+    ctx context.Context{{genParamArgs $pathParams}},{{- _ -}}
+    {{if $hasParams}}params *{{$opid}}Params,{{end}}{{- _ -}}
+    reqEditors... RequestEditorFn,{{- _ -}}
+    ) ({{if $type200}}*{{$type200}},{{end}} error) {
+	res, err := h.Client.{{$opid}}WithResponse(ctx{{genParamNames $pathParams}},{{if $hasParams}}params,{{end}}reqEditors...)
+	if err != nil {
+		return {{if $type200}}nil,{{end}} err
+	}
+	if res.JSONDefault != nil {
+		return {{if $type200}}nil,{{end}} h.HandleError("{{$opid}}", res.HTTPResponse, res.Body, res.JSONDefault)
+	}
+	return {{if $type200}}res.JSON200,{{end}}nil
+}
+    {{end}}
+{{end}}{{/* range . $opid := .OperationId */}}

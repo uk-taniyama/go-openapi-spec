@@ -1,0 +1,77 @@
+package {{package}}
+
+import (
+	"net/http"
+	"path"
+
+	"github.com/deepmap/oapi-codegen/pkg/middleware"
+	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/labstack/echo/v4"
+)
+
+// SetupServer is add OapiRequestValidator middleware and
+func SetupServer(e *echo.Echo, basePath string) error {
+	swagger, err := GetSwagger()
+	if err != nil {
+		return err
+	}
+
+	// swaggerの情報を書き換える......
+	// 毎回パースしているので、ここで書き換えても問題なし！
+	swagger.Servers = openapi3.Servers{}
+	paths := openapi3.Paths{}
+	for k, v := range swagger.Paths {
+		paths[path.Join(basePath, k)] = v
+	}
+	swagger.Paths = paths
+
+
+	g := e.Group(basePath)
+	apidocsPath := path.Join(basePath, "/api-docs")
+	g.Use(middleware.OapiRequestValidatorWithOptions(swagger, &middleware.Options{
+		Skipper: func(ctx echo.Context) bool {
+			return ctx.Path() == apidocsPath
+		},
+	}))
+	g.GET("/api-docs", func(ctx echo.Context) error {
+		bytes, err := rawSpec()
+		if err != nil {
+			return nil
+		}
+		return ctx.Blob(http.StatusOK, "application/vnd.oai.openapi+json", bytes)
+	})
+	RegisterHandlers(g, NewServer())
+
+	return nil
+}
+
+// Server represents all server handlers.
+type Server struct{
+}
+
+// Creates a new Server,
+func NewServer() ServerInterface {
+	return &Server{};
+}
+
+{{range .}}{{.SummaryAsComment }}
+{{$opid := .OperationId}}
+// ({{.Method}} {{.Path}})
+func (s* Server) {{.OperationId}}(ctx echo.Context{{genParamArgs .PathParams}}{{if .RequiresParamObject}}, params {{.OperationId}}Params{{end}}) error {
+    {{- range .Bodies}}
+        reqBody := &{{$opid}}{{.NameTag}}RequestBody{}
+        err := ctx.Bind(&reqBody)
+        if err != nil {
+            return err
+        }
+    {{- end}}
+	{{- $ok := ""}}
+	{{- range getResponseTypeDefinitions .}}
+		// {{.ResponseName}} {{getStatusText .ResponseName}} {{.ContentTypeName}}
+		// res := {{.Schema.GoType}}{}
+        // return ctx.JSON({{.ResponseName}}, &resBody)
+
+    {{end}}
+	return echo.ErrBadRequest
+}
+{{end}}
