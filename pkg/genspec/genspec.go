@@ -15,7 +15,6 @@
 package genspec
 
 import (
-	"encoding/json"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -28,9 +27,9 @@ import (
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 	"gopkg.in/go-playground/validator.v9"
+	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -101,13 +100,33 @@ func (g *Generator) Run() error {
 
 	g.generate(af)
 
-	bytes, err := json.Marshal(g.spec)
+	kv := KeyValue{}
+	err = Convert(g.spec, &kv)
 	if err != nil {
-		return errors.Wrap(err, "json.Marshal")
+		return errors.Wrap(err, "Convert Scheme to KeyValue")
 	}
-	bytes, err = yaml.JSONToYAML(bytes)
+	// KeyValue -> MapSlice
+	ms := yaml.MapSlice{}
+	keys := []string{"openapi", "info", "paths", "components"}
+	for _, k := range keys {
+		v := kv[k]
+		if v != nil {
+			ms = append(ms, yaml.MapItem{
+				Key:   k,
+				Value: v,
+			})
+			delete(kv, k)
+		}
+	}
+	for k, v := range kv {
+		ms = append(ms, yaml.MapItem{
+			Key:   k,
+			Value: v,
+		})
+	}
+	bytes, err := yaml.Marshal(&ms)
 	if err != nil {
-		return errors.Wrap(err, "yaml.JSONToYAML")
+		return errors.Wrap(err, "yaml.Marshal")
 	}
 	_, err = w.Write(bytes)
 	if err != nil {
@@ -394,7 +413,7 @@ func ParseOpeDoc(doc string) *OpeDoc {
 				log.Panic("ParseOpeDoc:", err)
 			}
 			return &OpeDoc{
-				Desc:   desc,
+				Desc:   strings.TrimSpace(desc),
 				Method: g[1],
 				Path:   g[2],
 				KV:     kv,
