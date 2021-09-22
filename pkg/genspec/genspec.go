@@ -16,6 +16,7 @@ package genspec
 
 import (
 	"encoding/json"
+	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -324,14 +325,27 @@ func (g *Generator) appendPath(ope *openapi3.Operation, name string, expr ast.Ex
 	})
 }
 
+func getResponse(ope *openapi3.Operation, name string) *openapi3.Response {
+	ref := ope.Responses[name]
+	if ref == nil {
+		ref = &openapi3.ResponseRef{
+			Value: &openapi3.Response{},
+		}
+		ope.Responses[name] = ref
+	}
+	return ref.Value
+}
+
+func (g *Generator) setResponseDesc(ope *openapi3.Operation, name string, desc string) {
+	res := getResponse(ope, name)
+	res.Description = &desc
+}
+
 func (g *Generator) setResponse(ope *openapi3.Operation, name string, ref *openapi3.SchemaRef) {
-	ope.Responses[name] = &openapi3.ResponseRef{
-		Value: &openapi3.Response{
-			Content: openapi3.Content{
-				"application/json": &openapi3.MediaType{
-					Schema: ref,
-				},
-			},
+	res := getResponse(ope, name)
+	res.Content = openapi3.Content{
+		"application/json": &openapi3.MediaType{
+			Schema: ref,
 		},
 	}
 }
@@ -349,13 +363,52 @@ func (g *Generator) setOperation(path string, method string, ope *openapi3.Opera
 	p.SetOperation(method, ope)
 }
 
-var path = regexp.MustCompile("\\(([A-Z]+) (/.+)\\)")
+var codePattern = regexp.MustCompile("^[1-9][0-9][0-9]$")
+
+func isResCode(name string) bool {
+	if codePattern.MatchString(name) {
+		return true
+	}
+	return name == "default"
+}
+
+type OpeDoc struct {
+	Desc   string
+	Method string
+	Path   string
+	KV     KeyValue
+}
+
+var PathPattern = regexp.MustCompile("\\(([A-Z]+) (/.+)\\)")
+
+func ParseOpeDoc(doc string) *OpeDoc {
+	lines := strings.Split(doc, "\n")
+	for i, l := range lines {
+		g := PathPattern.FindStringSubmatch(l)
+		if len(g) > 0 {
+			desc := strings.Join(lines[:i], "\n")
+			rest := strings.Join(lines[i+1:], "\n")
+			kv := KeyValue{}
+			err := yaml.Unmarshal([]byte(rest), &kv)
+			if err != nil {
+				log.Panic("ParseOpeDoc:", err)
+			}
+			return &OpeDoc{
+				Desc:   desc,
+				Method: g[1],
+				Path:   g[2],
+				KV:     kv,
+			}
+		}
+	}
+	return nil
+}
 
 func (g *Generator) generatePaths(ts *ast.TypeSpec, i *ast.InterfaceType) {
 	for _, m := range i.Methods.List {
 		name := m.Names[0].Name
-		group := path.FindStringSubmatch(m.Doc.Text())
-		if len(group) == 0 {
+		opeDoc := ParseOpeDoc(m.Doc.Text())
+		if opeDoc == nil {
 			log.Panicf("Not found pathinfo: %v\n", name)
 		}
 		ft, ok := m.Type.(*ast.FuncType)
@@ -368,12 +421,15 @@ func (g *Generator) generatePaths(ts *ast.TypeSpec, i *ast.InterfaceType) {
 			Parameters:  openapi3.Parameters{},
 			Responses:   openapi3.Responses{},
 		}
-		method := strings.ToUpper(group[1])
-		path := group[2]
-		g.setOperation(path, method, ope)
-		g.setResponse(ope, "default", &openapi3.SchemaRef{
-			Ref: "#/components/schemas/" + "Error",
-		})
+		g.setOperation(opeDoc.Path, opeDoc.Method, ope)
+		if opeDoc.Desc != "" {
+			ope.Description = opeDoc.Desc
+		}
+		for k, v := range opeDoc.KV {
+			if isResCode(k) {
+				g.setResponseDesc(ope, k, fmt.Sprintf("%v", v))
+			}
+		}
 
 		for _, p := range ft.Params.List {
 			name := p.Names[0].Name
@@ -387,6 +443,9 @@ func (g *Generator) generatePaths(ts *ast.TypeSpec, i *ast.InterfaceType) {
 			}
 		}
 
+		g.setResponse(ope, "default", &openapi3.SchemaRef{
+			Ref: "#/components/schemas/" + "Error",
+		})
 		if ft.Results != nil && len(ft.Results.List) > 0 {
 			for _, r := range ft.Results.List {
 				g.appendResponse(ope, r)

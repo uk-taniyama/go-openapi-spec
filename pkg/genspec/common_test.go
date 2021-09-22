@@ -137,3 +137,21 @@ func TestToScheme(t *testing.T) {
 		})
 	}
 }
+
+func TestParseOpeDoc(t *testing.T) {
+	const doc = `Description
+	
+(GET /pets)
+200: pet response
+default: unexpected error
+`
+	opeDoc := genspec.ParseOpeDoc(doc)
+	require.NotNil(t, opeDoc)
+	require.Equal(t, opeDoc.Desc, "Description")
+	require.Equal(t, opeDoc.Method, "GET")
+	require.Equal(t, opeDoc.Path, "/pets")
+	require.Equal(t, opeDoc.KV, genspec.KeyValue{
+		"200":     "pet response",
+		"default": "unexpected error",
+	})
+}

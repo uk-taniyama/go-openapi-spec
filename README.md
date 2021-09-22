@@ -10,6 +10,7 @@ goでOpenAPIのスペック(サブセット)を書いてOpenAPI spec jsonを出�
 
 - infoの埋め込み→const OpenAPISpecにspecを書く！
 - validationの書き出し→StructTagに生json5で書く！
+- responses/./dscriptionの書き出し.....って何をどこから出せばいいんだ？？？→コメントから取得する！
 
 ## やりたいこと
 
