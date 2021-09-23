@@ -21,6 +21,7 @@ import (
 
 	"github.com/flynn/json5"
 	"github.com/getkin/kin-openapi/openapi3"
+	"gopkg.in/yaml.v2"
 )
 
 type KeyValue map[string]interface{}
@@ -92,4 +93,58 @@ func ExpandTagForScheme(scheme *openapi3.Schema, tag KeyValue) {
 		}
 	}
 	Convert(&work, scheme)
+}
+
+func Must(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func MustParseMapSlice(str string) *yaml.MapSlice {
+	ms, err := ParseMapSlice(str)
+	Must(err)
+	return ms
+}
+
+func ParseMapSlice(str string) (*yaml.MapSlice, error) {
+	ms := &yaml.MapSlice{}
+	err := yaml.Unmarshal([]byte(str), ms)
+	return ms, err
+}
+
+func StringifyMapSlice(obj *yaml.MapSlice) (string, error) {
+	bytes, err := yaml.Marshal(obj)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), err
+}
+
+func MergeMapSlice(a *yaml.MapSlice, b *yaml.MapSlice) {
+NEXT_B:
+	for _, itemB := range *b {
+		for i, itemA := range *a {
+			if itemA.Key != itemB.Key {
+				continue
+			}
+
+			itemValueA, ok := itemA.Value.(yaml.MapSlice)
+			if ok {
+				itemValueB, ok := itemB.Value.(yaml.MapSlice)
+				if ok {
+					MergeMapSlice(&itemValueA, &itemValueB)
+					// Update by index !!!
+					(*a)[i].Value = itemValueA
+					continue NEXT_B
+				}
+			}
+
+			// Update by index !!!
+			(*a)[i].Value = itemB.Value
+			continue NEXT_B
+		}
+
+		*a = append(*a, itemB)
+	}
 }

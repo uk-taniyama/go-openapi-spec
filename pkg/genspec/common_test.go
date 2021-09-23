@@ -15,6 +15,7 @@
 package genspec_test
 
 import (
+	_ "embed"
 	"encoding/json"
 	"strconv"
 	"testing"
@@ -22,6 +23,7 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/stretchr/testify/require"
 	"github.com/uk-taniyama/go-openapi-spec/pkg/genspec"
+	"gopkg.in/yaml.v2"
 )
 
 type TestStruct struct {
@@ -154,4 +156,25 @@ default: unexpected error
 		"200":     "pet response",
 		"default": "unexpected error",
 	})
+}
+
+//go:embed testdata/mergeyaml.yaml
+var testdataMergeyaml string
+
+func TestMergeMapSlice(t *testing.T) {
+	testdata := genspec.MustParseMapSlice(testdataMergeyaml)
+	data := yaml.MapSlice{}
+	for _, item := range *testdata {
+		// key:
+		//   in:
+		//   out:
+		key := item.Key.(string)
+		value := item.Value.(yaml.MapSlice)
+		in := value[0].Value.(yaml.MapSlice)
+		out := value[1].Value.(yaml.MapSlice)
+		t.Run(key, func(t *testing.T) {
+			genspec.MergeMapSlice(&data, &in)
+			require.Equal(t, &out, &data)
+		})
+	}
 }

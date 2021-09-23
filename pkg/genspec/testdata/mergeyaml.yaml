@@ -1,0 +1,37 @@
+case1:
+  in:
+    a: a
+  out:
+    a: a
+
+case2:
+  in:
+    a: b
+  out:
+    a: b
+
+case3:
+  in:
+    b: c
+  out:
+    a: b
+    b: c
+
+case4:
+  in:
+    a:
+      b: b
+  out:
+    a:
+      b : b
+    b: c
+
+case5:
+  in:
+    a:
+      c: c
+  out:
+    a:
+      b: b
+      c: c
+    b: c
