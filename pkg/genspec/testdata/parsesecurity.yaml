@@ -1,0 +1,82 @@
+basic:
+  in: basic
+  out:
+    type: http
+    scheme: basic
+
+bearer:
+  in: bearer
+  out:
+    type: http
+    scheme: bearer
+
+jwt:
+  in: jwt
+  out:
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
+
+apiKey:
+  in: apiKey,cookie,X-API-KEY
+  out:
+    type: apiKey
+    in: cookie
+    name: X-API-KEY
+
+cookie:
+  in: cookie,X-API-KEY
+  out:
+    type: apiKey
+    in: cookie
+    name: X-API-KEY
+
+header:
+  in: header,X-API-KEY
+  out:
+    type: apiKey
+    in: header
+    name: X-API-KEY
+
+oidc:
+  in: oidc,https://example.com/.well-known/openid-configuration
+  out:
+    type: openIdConnect
+    openIdConnectUrl: https://example.com/.well-known/openid-configuration
+
+openIdConnect:
+  in: openIdConnect,https://example.com/.well-known/openid-configuration
+  out:
+    type: openIdConnect
+    openIdConnectUrl: https://example.com/.well-known/openid-configuration
+
+authorizationCode:
+  in: oauth2,authorizationCode,https://api.example.com/oauth2/authorize,"{read_pets:'read your pets',write_pets:'modify pets in your account'}"
+  out:
+    type: oauth2
+    flows:
+      authorizationCode:
+        authorizationUrl: https://api.example.com/oauth2/authorize
+        scopes:
+          read_pets: read your pets
+          write_pets: modify pets in your account
+
+implicit:
+  in: oauth2,implicit,https://api.example.com/oauth2/authorize,"{read_pets:'read your pets',write_pets:'modify pets in your account'}"
+  out:
+    type: oauth2
+    flows:
+      implicit:
+        authorizationUrl: https://api.example.com/oauth2/authorize
+        scopes:
+          read_pets: read your pets
+          write_pets: modify pets in your account
+
+oauth2noscope:
+  in: oauth2,implicit,https://api.example.com/oauth2/authorize
+  out:
+    type: oauth2
+    flows:
+      implicit:
+        authorizationUrl: https://api.example.com/oauth2/authorize
+        scopes:

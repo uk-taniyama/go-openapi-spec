@@ -33,7 +33,7 @@ func main() {
 	flag.StringVar(&config.OutputFile, "o", "", "OutputFile ganarated OpenAPI spec")
 	flag.Parse()
 
-	g, err := genspec.New(&config)
+	g, err := genspec.NewGenerator(&config)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Usage:")
 		flag.PrintDefaults()

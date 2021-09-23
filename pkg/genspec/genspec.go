@@ -26,18 +26,12 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/flynn/json5"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/iancoleman/strcase"
 	"github.com/pkg/errors"
 	"gopkg.in/go-playground/validator.v9"
 	"gopkg.in/yaml.v2"
-)
-
-var (
-	flagPackageName  string
-	flagOutputFile   string
-	flagInputFile    string
-	flagTemplateFile string
 )
 
 type Config struct {
@@ -68,7 +62,7 @@ type Generator struct {
 	spec   *openapi3.T
 }
 
-func New(config *Config) (*Generator, error) {
+func NewGenerator(config *Config) (*Generator, error) {
 	if config.Debug && config.InputFile != "" {
 	} else {
 		validate := validator.New()
@@ -472,4 +466,58 @@ func (g *Generator) generatePaths(ts *ast.TypeSpec, i *ast.InterfaceType) {
 			}
 		}
 	}
+}
+
+func ParseSecurityScheme(text string) (*openapi3.SecurityScheme, error) {
+	cells, err := CSVSplit(text)
+	if err != nil {
+		return nil, err
+	}
+	TrimSpaceAll(cells)
+
+	switch cells[0] {
+	case "basic", "bearer":
+		s := openapi3.NewSecurityScheme().WithType("http").WithScheme(cells[0])
+		if len(cells) > 1 {
+			s.WithBearerFormat(cells[1])
+		}
+		return s, nil
+	case "jwt":
+		s := openapi3.NewJWTSecurityScheme()
+		return s, nil
+	case "apiKey":
+		s := openapi3.NewSecurityScheme().WithType("apiKey").WithIn(cells[1]).WithName(cells[2])
+		return s, nil
+	case "cookie", "query", "header":
+		s := openapi3.NewSecurityScheme().WithType("apiKey").WithIn(cells[0]).WithName(cells[1])
+		return s, nil
+	case "oauth2":
+		f := cells[1]
+		url := cells[2]
+		scopes := map[string]string{}
+		if len(cells) > 3 {
+			err := json5.Unmarshal([]byte(cells[3]), &scopes)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		flows := KeyValue{}
+		flow := &openapi3.OAuthFlow{
+			AuthorizationURL: url,
+		}
+		flows[f] = flow
+		if len(scopes) > 0 {
+			flow.Scopes = scopes
+		}
+
+		s := openapi3.NewSecurityScheme().WithType("oauth2")
+		s.Flows = &openapi3.OAuthFlows{}
+		err = Convert(&flows, &s.Flows)
+		return s, err
+	case "oidc", "openIdConnect":
+		s := openapi3.NewOIDCSecurityScheme(cells[1])
+		return s, nil
+	}
+	return nil, err
 }

@@ -15,7 +15,11 @@
 package genspec
 
 import (
+	"bytes"
+	"encoding/csv"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"reflect"
 	"strings"
 
@@ -25,6 +29,38 @@ import (
 )
 
 type KeyValue map[string]interface{}
+
+func convertMap(m *map[interface{}]interface{}, kv *map[string]interface{}) {
+	for k, v := range *m {
+		s, ok := k.(string)
+		if !ok {
+			s = fmt.Sprintf("%v", k)
+		}
+		m2, ok := v.(map[interface{}]interface{})
+		if ok {
+			kv2 := map[string]interface{}{}
+			convertMap(&m2, &kv2)
+			(*kv)[s] = kv2
+		} else {
+			(*kv)[s] = v
+		}
+	}
+}
+
+func (kv KeyValue) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var data interface{}
+	err := unmarshal(&data)
+	if err != nil {
+		return nil
+	}
+	m, ok := data.(map[interface{}]interface{})
+	if !ok {
+		return errors.New("KeyValue.UnmarshalYAML:cannot unmarshal")
+	}
+	raw := map[string]interface{}(kv)
+	convertMap(&m, &raw)
+	return nil
+}
 
 func ParseTag(tag string) KeyValue {
 	kv := KeyValue{}
@@ -95,18 +131,6 @@ func ExpandTagForScheme(scheme *openapi3.Schema, tag KeyValue) {
 	Convert(&work, scheme)
 }
 
-func Must(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
-func MustParseMapSlice(str string) *yaml.MapSlice {
-	ms, err := ParseMapSlice(str)
-	Must(err)
-	return ms
-}
-
 func ParseMapSlice(str string) (*yaml.MapSlice, error) {
 	ms := &yaml.MapSlice{}
 	err := yaml.Unmarshal([]byte(str), ms)
@@ -146,5 +170,16 @@ NEXT_B:
 		}
 
 		*a = append(*a, itemB)
+	}
+}
+
+func CSVSplit(line string) ([]string, error) {
+	r := csv.NewReader(bytes.NewBufferString(line))
+	return r.Read()
+}
+
+func TrimSpaceAll(cells []string) {
+	for i := 0; i < len(cells); i += 1 {
+		cells[i] = strings.TrimSpace(cells[i])
 	}
 }

@@ -158,11 +158,23 @@ default: unexpected error
 	})
 }
 
+func Must(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func MustParseMapSlice(str string) *yaml.MapSlice {
+	ms, err := genspec.ParseMapSlice(str)
+	Must(err)
+	return ms
+}
+
 //go:embed testdata/mergeyaml.yaml
 var testdataMergeyaml string
 
 func TestMergeMapSlice(t *testing.T) {
-	testdata := genspec.MustParseMapSlice(testdataMergeyaml)
+	testdata := MustParseMapSlice(testdataMergeyaml)
 	data := yaml.MapSlice{}
 	for _, item := range *testdata {
 		// key:
@@ -177,4 +189,52 @@ func TestMergeMapSlice(t *testing.T) {
 			require.Equal(t, &out, &data)
 		})
 	}
+}
+
+//go:embed testdata/parsesecurity.yaml
+var testdataParseSecurity []byte
+
+func MustJSONStringify(obj interface{}) string {
+	b, err := json.Marshal(obj)
+	if err != nil {
+		return err.Error()
+	}
+	return string(b)
+}
+
+func TestParseSecurity(t *testing.T) {
+	testdata := genspec.KeyValue{}
+	err := yaml.Unmarshal(testdataParseSecurity, &testdata)
+	require.NoError(t, err)
+	for key, v := range testdata {
+		value := v.(map[string]interface{})
+		in := value["in"].(string)
+		out := value["out"].(map[string]interface{})
+		t.Run(key, func(t *testing.T) {
+			data, err := genspec.ParseSecurityScheme(in)
+			require.NoError(t, err)
+			require.Equal(
+				t,
+				MustJSONStringify(out),
+				MustJSONStringify(data),
+			)
+		})
+	}
+}
+
+func TestKeyValueUnmarshial(t *testing.T) {
+	kv := genspec.KeyValue{}
+	err := yaml.Unmarshal([]byte("xxx"), &kv)
+	require.EqualError(t, err, "KeyValue.UnmarshalYAML:cannot unmarshal")
+	text := `
+a1:
+  b1: c
+a2:
+  b2: c
+`
+	err = yaml.Unmarshal([]byte(text), &kv)
+	require.NoError(t, err)
+	d, err := json.Marshal(&kv)
+	require.NoError(t, err)
+	require.JSONEq(t, string(d), `{"a1":{"b1":"c"},"a2":{"b2":"c"}}`)
 }

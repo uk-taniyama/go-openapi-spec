@@ -17,6 +17,8 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 `
 
+const Security = "basic"
+
 type Error struct {
 	Code    int32
 	Message string
