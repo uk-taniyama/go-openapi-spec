@@ -7,6 +7,7 @@ require (
 	github.com/flynn/json5 v0.0.0-20160717195620-7620272ed633
 	github.com/getkin/kin-openapi v0.75.0
 	github.com/go-playground/universal-translator v0.18.0 // indirect
+	github.com/iancoleman/strcase v0.2.0
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/labstack/echo/v4 v4.5.0
 	github.com/leodido/go-urn v1.2.1 // indirect

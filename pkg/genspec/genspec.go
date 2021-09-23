@@ -27,6 +27,7 @@ import (
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/iancoleman/strcase"
 	"github.com/pkg/errors"
 	"gopkg.in/go-playground/validator.v9"
 	"gopkg.in/yaml.v2"
@@ -215,7 +216,7 @@ func (g *Generator) fromStruct(s *ast.StructType) *openapi3.SchemaRef {
 			}
 			parentRef = "#/components/schemas/" + i.Name
 		} else {
-			name := f.Names[0].Name
+			name := strcase.ToLowerCamel(f.Names[0].Name)
 			prop := fromType(f.Type)
 			required = append(required, name)
 			if f.Tag != nil {
