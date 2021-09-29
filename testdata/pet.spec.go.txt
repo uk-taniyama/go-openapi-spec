@@ -392,338 +392,362 @@
    391  .  .  .  .  .  .  .  List: []*ast.Field (len = 4) {
    392  .  .  .  .  .  .  .  .  0: *ast.Field {
    393  .  .  .  .  .  .  .  .  .  Doc: *ast.CommentGroup {
-   394  .  .  .  .  .  .  .  .  .  .  List: []*ast.Comment (len = 1) {
+   394  .  .  .  .  .  .  .  .  .  .  List: []*ast.Comment (len = 7) {
    395  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Comment {
    396  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:41:2
-   397  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// (GET /pets)"
+   397  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// Returns all pets from the system that the user has access to"
    398  .  .  .  .  .  .  .  .  .  .  .  }
-   399  .  .  .  .  .  .  .  .  .  .  }
-   400  .  .  .  .  .  .  .  .  .  }
-   401  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
-   402  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
-   403  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:42:2
-   404  .  .  .  .  .  .  .  .  .  .  .  Name: "FindPets"
-   405  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
-   406  .  .  .  .  .  .  .  .  .  .  .  .  Kind: func
-   407  .  .  .  .  .  .  .  .  .  .  .  .  Name: "FindPets"
-   408  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 392)
-   409  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
-   410  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
-   411  .  .  .  .  .  .  .  .  .  .  .  }
-   412  .  .  .  .  .  .  .  .  .  .  }
-   413  .  .  .  .  .  .  .  .  .  }
-   414  .  .  .  .  .  .  .  .  .  Type: *ast.FuncType {
-   415  .  .  .  .  .  .  .  .  .  .  Func: -
-   416  .  .  .  .  .  .  .  .  .  .  Params: *ast.FieldList {
-   417  .  .  .  .  .  .  .  .  .  .  .  Opening: testdata/pet.spec.go:42:10
-   418  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
-   419  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
-   420  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
-   421  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
-   422  .  .  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
-   423  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:42:11
-   424  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "params"
-   425  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
-   426  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Kind: var
-   427  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "params"
-   428  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 419)
-   429  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
-   430  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
-   431  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   432  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   433  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   434  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.Ident {
-   435  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:42:18
-   436  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "FindPetsParams"
-   437  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *(obj @ 293)
-   438  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   439  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
-   440  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
-   441  .  .  .  .  .  .  .  .  .  .  .  .  }
-   442  .  .  .  .  .  .  .  .  .  .  .  }
-   443  .  .  .  .  .  .  .  .  .  .  .  Closing: testdata/pet.spec.go:42:32
-   444  .  .  .  .  .  .  .  .  .  .  }
-   445  .  .  .  .  .  .  .  .  .  .  Results: *ast.FieldList {
-   446  .  .  .  .  .  .  .  .  .  .  .  Opening: -
-   447  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
-   448  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
-   449  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
-   450  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: nil
-   451  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.ArrayType {
-   452  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Lbrack: testdata/pet.spec.go:42:34
-   453  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Len: nil
-   454  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Elt: *ast.Ident {
-   455  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:42:36
-   456  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "Pet"
-   457  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *(obj @ 224)
-   458  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   459  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   460  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
-   461  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
-   462  .  .  .  .  .  .  .  .  .  .  .  .  }
-   463  .  .  .  .  .  .  .  .  .  .  .  }
-   464  .  .  .  .  .  .  .  .  .  .  .  Closing: -
-   465  .  .  .  .  .  .  .  .  .  .  }
-   466  .  .  .  .  .  .  .  .  .  }
-   467  .  .  .  .  .  .  .  .  .  Tag: nil
-   468  .  .  .  .  .  .  .  .  .  Comment: nil
-   469  .  .  .  .  .  .  .  .  }
-   470  .  .  .  .  .  .  .  .  1: *ast.Field {
-   471  .  .  .  .  .  .  .  .  .  Doc: *ast.CommentGroup {
-   472  .  .  .  .  .  .  .  .  .  .  List: []*ast.Comment (len = 1) {
-   473  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Comment {
-   474  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:44:2
-   475  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// (POST /pets)"
-   476  .  .  .  .  .  .  .  .  .  .  .  }
-   477  .  .  .  .  .  .  .  .  .  .  }
-   478  .  .  .  .  .  .  .  .  .  }
-   479  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
-   480  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
-   481  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:45:2
-   482  .  .  .  .  .  .  .  .  .  .  .  Name: "AddPet"
-   483  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
-   484  .  .  .  .  .  .  .  .  .  .  .  .  Kind: func
-   485  .  .  .  .  .  .  .  .  .  .  .  .  Name: "AddPet"
-   486  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 470)
-   487  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
-   488  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
-   489  .  .  .  .  .  .  .  .  .  .  .  }
-   490  .  .  .  .  .  .  .  .  .  .  }
-   491  .  .  .  .  .  .  .  .  .  }
-   492  .  .  .  .  .  .  .  .  .  Type: *ast.FuncType {
-   493  .  .  .  .  .  .  .  .  .  .  Func: -
-   494  .  .  .  .  .  .  .  .  .  .  Params: *ast.FieldList {
-   495  .  .  .  .  .  .  .  .  .  .  .  Opening: testdata/pet.spec.go:45:8
-   496  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
-   497  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
-   498  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
-   499  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
-   500  .  .  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
-   501  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:45:9
-   502  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "body"
-   503  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
-   504  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Kind: var
-   505  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "body"
-   506  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 497)
-   507  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
-   508  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
-   509  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   510  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   511  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   512  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.Ident {
-   513  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:45:14
-   514  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "Pet"
-   515  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *(obj @ 224)
-   516  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   517  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
-   518  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
-   519  .  .  .  .  .  .  .  .  .  .  .  .  }
-   520  .  .  .  .  .  .  .  .  .  .  .  }
-   521  .  .  .  .  .  .  .  .  .  .  .  Closing: testdata/pet.spec.go:45:17
-   522  .  .  .  .  .  .  .  .  .  .  }
-   523  .  .  .  .  .  .  .  .  .  .  Results: *ast.FieldList {
-   524  .  .  .  .  .  .  .  .  .  .  .  Opening: -
-   525  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
-   526  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
-   527  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
-   528  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: nil
-   529  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.Ident {
-   530  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:45:19
-   531  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "Pet"
-   532  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *(obj @ 224)
-   533  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   534  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
-   535  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
-   536  .  .  .  .  .  .  .  .  .  .  .  .  }
-   537  .  .  .  .  .  .  .  .  .  .  .  }
-   538  .  .  .  .  .  .  .  .  .  .  .  Closing: -
-   539  .  .  .  .  .  .  .  .  .  .  }
-   540  .  .  .  .  .  .  .  .  .  }
-   541  .  .  .  .  .  .  .  .  .  Tag: nil
-   542  .  .  .  .  .  .  .  .  .  Comment: nil
-   543  .  .  .  .  .  .  .  .  }
-   544  .  .  .  .  .  .  .  .  2: *ast.Field {
-   545  .  .  .  .  .  .  .  .  .  Doc: *ast.CommentGroup {
-   546  .  .  .  .  .  .  .  .  .  .  List: []*ast.Comment (len = 1) {
-   547  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Comment {
-   548  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:47:2
-   549  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// (DELETE /pets/{id})"
-   550  .  .  .  .  .  .  .  .  .  .  .  }
-   551  .  .  .  .  .  .  .  .  .  .  }
-   552  .  .  .  .  .  .  .  .  .  }
-   553  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
-   554  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
-   555  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:48:2
-   556  .  .  .  .  .  .  .  .  .  .  .  Name: "DeletePet"
-   557  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
-   558  .  .  .  .  .  .  .  .  .  .  .  .  Kind: func
-   559  .  .  .  .  .  .  .  .  .  .  .  .  Name: "DeletePet"
-   560  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 544)
-   561  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
-   562  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
-   563  .  .  .  .  .  .  .  .  .  .  .  }
-   564  .  .  .  .  .  .  .  .  .  .  }
-   565  .  .  .  .  .  .  .  .  .  }
-   566  .  .  .  .  .  .  .  .  .  Type: *ast.FuncType {
-   567  .  .  .  .  .  .  .  .  .  .  Func: -
-   568  .  .  .  .  .  .  .  .  .  .  Params: *ast.FieldList {
-   569  .  .  .  .  .  .  .  .  .  .  .  Opening: testdata/pet.spec.go:48:11
-   570  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
-   571  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
-   572  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
-   573  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
-   574  .  .  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
-   575  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:48:12
-   576  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "id"
-   577  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
-   578  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Kind: var
-   579  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "id"
-   580  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 571)
-   581  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
-   582  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
-   583  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   584  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   585  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   586  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.Ident {
-   587  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:48:15
-   588  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "int64"
-   589  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: nil
-   590  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   591  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
-   592  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
-   593  .  .  .  .  .  .  .  .  .  .  .  .  }
-   594  .  .  .  .  .  .  .  .  .  .  .  }
-   595  .  .  .  .  .  .  .  .  .  .  .  Closing: testdata/pet.spec.go:48:20
-   596  .  .  .  .  .  .  .  .  .  .  }
-   597  .  .  .  .  .  .  .  .  .  .  Results: nil
-   598  .  .  .  .  .  .  .  .  .  }
-   599  .  .  .  .  .  .  .  .  .  Tag: nil
-   600  .  .  .  .  .  .  .  .  .  Comment: nil
-   601  .  .  .  .  .  .  .  .  }
-   602  .  .  .  .  .  .  .  .  3: *ast.Field {
-   603  .  .  .  .  .  .  .  .  .  Doc: *ast.CommentGroup {
-   604  .  .  .  .  .  .  .  .  .  .  List: []*ast.Comment (len = 1) {
-   605  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Comment {
-   606  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:50:2
-   607  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// (GET /pets/{id})"
-   608  .  .  .  .  .  .  .  .  .  .  .  }
-   609  .  .  .  .  .  .  .  .  .  .  }
-   610  .  .  .  .  .  .  .  .  .  }
-   611  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
-   612  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
-   613  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:51:2
-   614  .  .  .  .  .  .  .  .  .  .  .  Name: "FindPetById"
-   615  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
-   616  .  .  .  .  .  .  .  .  .  .  .  .  Kind: func
-   617  .  .  .  .  .  .  .  .  .  .  .  .  Name: "FindPetById"
-   618  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 602)
-   619  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
-   620  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
-   621  .  .  .  .  .  .  .  .  .  .  .  }
-   622  .  .  .  .  .  .  .  .  .  .  }
-   623  .  .  .  .  .  .  .  .  .  }
-   624  .  .  .  .  .  .  .  .  .  Type: *ast.FuncType {
-   625  .  .  .  .  .  .  .  .  .  .  Func: -
-   626  .  .  .  .  .  .  .  .  .  .  Params: *ast.FieldList {
-   627  .  .  .  .  .  .  .  .  .  .  .  Opening: testdata/pet.spec.go:51:13
-   628  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
-   629  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
-   630  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
-   631  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
-   632  .  .  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
-   633  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:51:14
-   634  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "id"
-   635  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
-   636  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Kind: var
-   637  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "id"
-   638  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 629)
-   639  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
-   640  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
-   641  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   642  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   643  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   644  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.Ident {
-   645  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:51:17
-   646  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "int64"
-   647  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: nil
-   648  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   649  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
-   650  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
-   651  .  .  .  .  .  .  .  .  .  .  .  .  }
-   652  .  .  .  .  .  .  .  .  .  .  .  }
-   653  .  .  .  .  .  .  .  .  .  .  .  Closing: testdata/pet.spec.go:51:22
-   654  .  .  .  .  .  .  .  .  .  .  }
-   655  .  .  .  .  .  .  .  .  .  .  Results: *ast.FieldList {
-   656  .  .  .  .  .  .  .  .  .  .  .  Opening: -
-   657  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
-   658  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
-   659  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
-   660  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: nil
-   661  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.ArrayType {
-   662  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Lbrack: testdata/pet.spec.go:51:24
-   663  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Len: nil
-   664  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Elt: *ast.Ident {
-   665  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:51:26
-   666  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "Pet"
-   667  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *(obj @ 224)
-   668  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   669  .  .  .  .  .  .  .  .  .  .  .  .  .  }
-   670  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
-   671  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
-   672  .  .  .  .  .  .  .  .  .  .  .  .  }
-   673  .  .  .  .  .  .  .  .  .  .  .  }
-   674  .  .  .  .  .  .  .  .  .  .  .  Closing: -
-   675  .  .  .  .  .  .  .  .  .  .  }
-   676  .  .  .  .  .  .  .  .  .  }
-   677  .  .  .  .  .  .  .  .  .  Tag: nil
-   678  .  .  .  .  .  .  .  .  .  Comment: nil
-   679  .  .  .  .  .  .  .  .  }
-   680  .  .  .  .  .  .  .  }
-   681  .  .  .  .  .  .  .  Closing: testdata/pet.spec.go:52:1
-   682  .  .  .  .  .  .  }
-   683  .  .  .  .  .  .  Incomplete: false
-   684  .  .  .  .  .  }
-   685  .  .  .  .  .  Comment: nil
-   686  .  .  .  .  }
-   687  .  .  .  }
-   688  .  .  .  Rparen: -
-   689  .  .  }
-   690  .  }
-   691  .  Scope: *ast.Scope {
-   692  .  .  Outer: nil
-   693  .  .  Objects: map[string]*ast.Object (len = 6) {
-   694  .  .  .  "FindPetsParams": *(obj @ 293)
-   695  .  .  .  "Interface": *(obj @ 378)
-   696  .  .  .  "OpenAPISpec": *(obj @ 21)
-   697  .  .  .  "Error": *(obj @ 54)
-   698  .  .  .  "NewPet": *(obj @ 135)
-   699  .  .  .  "Pet": *(obj @ 224)
-   700  .  .  }
-   701  .  }
-   702  .  Imports: nil
-   703  .  Unresolved: []*ast.Ident (len = 9) {
-   704  .  .  0: *(obj @ 83)
-   705  .  .  1: *(obj @ 106)
-   706  .  .  2: *(obj @ 164)
-   707  .  .  3: *(obj @ 191)
-   708  .  .  4: *(obj @ 264)
-   709  .  .  5: *(obj @ 325)
-   710  .  .  6: *(obj @ 349)
-   711  .  .  7: *(obj @ 586)
-   712  .  .  8: *(obj @ 644)
-   713  .  }
-   714  .  Comments: []*ast.CommentGroup (len = 5) {
-   715  .  .  0: *ast.CommentGroup {
-   716  .  .  .  List: []*ast.Comment (len = 1) {
-   717  .  .  .  .  0: *ast.Comment {
-   718  .  .  .  .  .  Slash: testdata/pet.spec.go:1:1
-   719  .  .  .  .  .  Text: "// +build ignore"
-   720  .  .  .  .  }
-   721  .  .  .  }
-   722  .  .  }
-   723  .  .  1: *(obj @ 393)
-   724  .  .  2: *(obj @ 471)
-   725  .  .  3: *(obj @ 545)
-   726  .  .  4: *(obj @ 603)
-   727  .  }
-   728  }
+   399  .  .  .  .  .  .  .  .  .  .  .  1: *ast.Comment {
+   400  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:42:2
+   401  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// Nam sed condimentum est. Maecenas tempor sagittis sapien, nec rhoncus sem sagittis sit amet. Aenean at gravida augue, ac iaculis sem. Curabitur odio lorem, ornare eget elementum nec, cursus id lectus. Duis mi turpis, pulvinar ac eros ac, tincidunt varius justo. In hac habitasse platea dictumst. Integer at adipiscing ante, a sagittis ligula. Aenean pharetra tempor ante molestie imperdiet. Vivamus id aliquam diam. Cras quis velit non tortor eleifend sagittis. Praesent at enim pharetra urna volutpat venenatis eget eget mauris. In eleifend fermentum facilisis. Praesent enim enim, gravida ac sodales sed, placerat id erat. Suspendisse lacus dolor, consectetur non augue vel, vehicula interdum libero. Morbi euismod sagittis libero sed lacinia."
+   402  .  .  .  .  .  .  .  .  .  .  .  }
+   403  .  .  .  .  .  .  .  .  .  .  .  2: *ast.Comment {
+   404  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:43:2
+   405  .  .  .  .  .  .  .  .  .  .  .  .  Text: "//"
+   406  .  .  .  .  .  .  .  .  .  .  .  }
+   407  .  .  .  .  .  .  .  .  .  .  .  3: *ast.Comment {
+   408  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:44:2
+   409  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// Sed tempus felis lobortis leo pulvinar rutrum. Nam mattis velit nisl, eu condimentum ligula luctus nec. Phasellus semper velit eget aliquet faucibus. In a mattis elit. Phasellus vel urna viverra, condimentum lorem id, rhoncus nibh. Ut pellentesque posuere elementum. Sed a varius odio. Morbi rhoncus ligula libero, vel eleifend nunc tristique vitae. Fusce et sem dui. Aenean nec scelerisque tortor. Fusce malesuada accumsan magna vel tempus. Quisque mollis felis eu dolor tristique, sit amet auctor felis gravida. Sed libero lorem, molestie sed nisl in, accumsan tempor nisi. Fusce sollicitudin massa ut lacinia mattis. Sed vel eleifend lorem. Pellentesque vitae felis pretium, pulvinar elit eu, euismod sapien."
+   410  .  .  .  .  .  .  .  .  .  .  .  }
+   411  .  .  .  .  .  .  .  .  .  .  .  4: *ast.Comment {
+   412  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:45:2
+   413  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// 200: pet response"
+   414  .  .  .  .  .  .  .  .  .  .  .  }
+   415  .  .  .  .  .  .  .  .  .  .  .  5: *ast.Comment {
+   416  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:46:2
+   417  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// default: unexpected error"
+   418  .  .  .  .  .  .  .  .  .  .  .  }
+   419  .  .  .  .  .  .  .  .  .  .  .  6: *ast.Comment {
+   420  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:47:2
+   421  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// (GET /pets)"
+   422  .  .  .  .  .  .  .  .  .  .  .  }
+   423  .  .  .  .  .  .  .  .  .  .  }
+   424  .  .  .  .  .  .  .  .  .  }
+   425  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
+   426  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
+   427  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:48:2
+   428  .  .  .  .  .  .  .  .  .  .  .  Name: "FindPets"
+   429  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
+   430  .  .  .  .  .  .  .  .  .  .  .  .  Kind: func
+   431  .  .  .  .  .  .  .  .  .  .  .  .  Name: "FindPets"
+   432  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 392)
+   433  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
+   434  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
+   435  .  .  .  .  .  .  .  .  .  .  .  }
+   436  .  .  .  .  .  .  .  .  .  .  }
+   437  .  .  .  .  .  .  .  .  .  }
+   438  .  .  .  .  .  .  .  .  .  Type: *ast.FuncType {
+   439  .  .  .  .  .  .  .  .  .  .  Func: -
+   440  .  .  .  .  .  .  .  .  .  .  Params: *ast.FieldList {
+   441  .  .  .  .  .  .  .  .  .  .  .  Opening: testdata/pet.spec.go:48:10
+   442  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
+   443  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
+   444  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
+   445  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
+   446  .  .  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
+   447  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:48:11
+   448  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "params"
+   449  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
+   450  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Kind: var
+   451  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "params"
+   452  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 443)
+   453  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
+   454  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
+   455  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   456  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   457  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   458  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.Ident {
+   459  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:48:18
+   460  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "FindPetsParams"
+   461  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *(obj @ 293)
+   462  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   463  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
+   464  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
+   465  .  .  .  .  .  .  .  .  .  .  .  .  }
+   466  .  .  .  .  .  .  .  .  .  .  .  }
+   467  .  .  .  .  .  .  .  .  .  .  .  Closing: testdata/pet.spec.go:48:32
+   468  .  .  .  .  .  .  .  .  .  .  }
+   469  .  .  .  .  .  .  .  .  .  .  Results: *ast.FieldList {
+   470  .  .  .  .  .  .  .  .  .  .  .  Opening: -
+   471  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
+   472  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
+   473  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
+   474  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: nil
+   475  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.ArrayType {
+   476  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Lbrack: testdata/pet.spec.go:48:34
+   477  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Len: nil
+   478  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Elt: *ast.Ident {
+   479  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:48:36
+   480  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "Pet"
+   481  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *(obj @ 224)
+   482  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   483  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   484  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
+   485  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
+   486  .  .  .  .  .  .  .  .  .  .  .  .  }
+   487  .  .  .  .  .  .  .  .  .  .  .  }
+   488  .  .  .  .  .  .  .  .  .  .  .  Closing: -
+   489  .  .  .  .  .  .  .  .  .  .  }
+   490  .  .  .  .  .  .  .  .  .  }
+   491  .  .  .  .  .  .  .  .  .  Tag: nil
+   492  .  .  .  .  .  .  .  .  .  Comment: nil
+   493  .  .  .  .  .  .  .  .  }
+   494  .  .  .  .  .  .  .  .  1: *ast.Field {
+   495  .  .  .  .  .  .  .  .  .  Doc: *ast.CommentGroup {
+   496  .  .  .  .  .  .  .  .  .  .  List: []*ast.Comment (len = 1) {
+   497  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Comment {
+   498  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:50:2
+   499  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// (POST /pets)"
+   500  .  .  .  .  .  .  .  .  .  .  .  }
+   501  .  .  .  .  .  .  .  .  .  .  }
+   502  .  .  .  .  .  .  .  .  .  }
+   503  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
+   504  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
+   505  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:51:2
+   506  .  .  .  .  .  .  .  .  .  .  .  Name: "AddPet"
+   507  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
+   508  .  .  .  .  .  .  .  .  .  .  .  .  Kind: func
+   509  .  .  .  .  .  .  .  .  .  .  .  .  Name: "AddPet"
+   510  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 494)
+   511  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
+   512  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
+   513  .  .  .  .  .  .  .  .  .  .  .  }
+   514  .  .  .  .  .  .  .  .  .  .  }
+   515  .  .  .  .  .  .  .  .  .  }
+   516  .  .  .  .  .  .  .  .  .  Type: *ast.FuncType {
+   517  .  .  .  .  .  .  .  .  .  .  Func: -
+   518  .  .  .  .  .  .  .  .  .  .  Params: *ast.FieldList {
+   519  .  .  .  .  .  .  .  .  .  .  .  Opening: testdata/pet.spec.go:51:8
+   520  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
+   521  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
+   522  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
+   523  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
+   524  .  .  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
+   525  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:51:9
+   526  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "body"
+   527  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
+   528  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Kind: var
+   529  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "body"
+   530  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 521)
+   531  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
+   532  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
+   533  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   534  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   535  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   536  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.Ident {
+   537  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:51:14
+   538  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "Pet"
+   539  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *(obj @ 224)
+   540  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   541  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
+   542  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
+   543  .  .  .  .  .  .  .  .  .  .  .  .  }
+   544  .  .  .  .  .  .  .  .  .  .  .  }
+   545  .  .  .  .  .  .  .  .  .  .  .  Closing: testdata/pet.spec.go:51:17
+   546  .  .  .  .  .  .  .  .  .  .  }
+   547  .  .  .  .  .  .  .  .  .  .  Results: *ast.FieldList {
+   548  .  .  .  .  .  .  .  .  .  .  .  Opening: -
+   549  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
+   550  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
+   551  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
+   552  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: nil
+   553  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.Ident {
+   554  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:51:19
+   555  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "Pet"
+   556  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *(obj @ 224)
+   557  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   558  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
+   559  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
+   560  .  .  .  .  .  .  .  .  .  .  .  .  }
+   561  .  .  .  .  .  .  .  .  .  .  .  }
+   562  .  .  .  .  .  .  .  .  .  .  .  Closing: -
+   563  .  .  .  .  .  .  .  .  .  .  }
+   564  .  .  .  .  .  .  .  .  .  }
+   565  .  .  .  .  .  .  .  .  .  Tag: nil
+   566  .  .  .  .  .  .  .  .  .  Comment: nil
+   567  .  .  .  .  .  .  .  .  }
+   568  .  .  .  .  .  .  .  .  2: *ast.Field {
+   569  .  .  .  .  .  .  .  .  .  Doc: *ast.CommentGroup {
+   570  .  .  .  .  .  .  .  .  .  .  List: []*ast.Comment (len = 1) {
+   571  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Comment {
+   572  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:53:2
+   573  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// (DELETE /pets/{id})"
+   574  .  .  .  .  .  .  .  .  .  .  .  }
+   575  .  .  .  .  .  .  .  .  .  .  }
+   576  .  .  .  .  .  .  .  .  .  }
+   577  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
+   578  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
+   579  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:54:2
+   580  .  .  .  .  .  .  .  .  .  .  .  Name: "DeletePet"
+   581  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
+   582  .  .  .  .  .  .  .  .  .  .  .  .  Kind: func
+   583  .  .  .  .  .  .  .  .  .  .  .  .  Name: "DeletePet"
+   584  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 568)
+   585  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
+   586  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
+   587  .  .  .  .  .  .  .  .  .  .  .  }
+   588  .  .  .  .  .  .  .  .  .  .  }
+   589  .  .  .  .  .  .  .  .  .  }
+   590  .  .  .  .  .  .  .  .  .  Type: *ast.FuncType {
+   591  .  .  .  .  .  .  .  .  .  .  Func: -
+   592  .  .  .  .  .  .  .  .  .  .  Params: *ast.FieldList {
+   593  .  .  .  .  .  .  .  .  .  .  .  Opening: testdata/pet.spec.go:54:11
+   594  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
+   595  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
+   596  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
+   597  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
+   598  .  .  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
+   599  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:54:12
+   600  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "id"
+   601  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
+   602  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Kind: var
+   603  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "id"
+   604  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 595)
+   605  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
+   606  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
+   607  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   608  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   609  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   610  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.Ident {
+   611  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:54:15
+   612  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "int64"
+   613  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: nil
+   614  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   615  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
+   616  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
+   617  .  .  .  .  .  .  .  .  .  .  .  .  }
+   618  .  .  .  .  .  .  .  .  .  .  .  }
+   619  .  .  .  .  .  .  .  .  .  .  .  Closing: testdata/pet.spec.go:54:20
+   620  .  .  .  .  .  .  .  .  .  .  }
+   621  .  .  .  .  .  .  .  .  .  .  Results: nil
+   622  .  .  .  .  .  .  .  .  .  }
+   623  .  .  .  .  .  .  .  .  .  Tag: nil
+   624  .  .  .  .  .  .  .  .  .  Comment: nil
+   625  .  .  .  .  .  .  .  .  }
+   626  .  .  .  .  .  .  .  .  3: *ast.Field {
+   627  .  .  .  .  .  .  .  .  .  Doc: *ast.CommentGroup {
+   628  .  .  .  .  .  .  .  .  .  .  List: []*ast.Comment (len = 1) {
+   629  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Comment {
+   630  .  .  .  .  .  .  .  .  .  .  .  .  Slash: testdata/pet.spec.go:56:2
+   631  .  .  .  .  .  .  .  .  .  .  .  .  Text: "// (GET /pets/{id})"
+   632  .  .  .  .  .  .  .  .  .  .  .  }
+   633  .  .  .  .  .  .  .  .  .  .  }
+   634  .  .  .  .  .  .  .  .  .  }
+   635  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
+   636  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
+   637  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:57:2
+   638  .  .  .  .  .  .  .  .  .  .  .  Name: "FindPetById"
+   639  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
+   640  .  .  .  .  .  .  .  .  .  .  .  .  Kind: func
+   641  .  .  .  .  .  .  .  .  .  .  .  .  Name: "FindPetById"
+   642  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 626)
+   643  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
+   644  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
+   645  .  .  .  .  .  .  .  .  .  .  .  }
+   646  .  .  .  .  .  .  .  .  .  .  }
+   647  .  .  .  .  .  .  .  .  .  }
+   648  .  .  .  .  .  .  .  .  .  Type: *ast.FuncType {
+   649  .  .  .  .  .  .  .  .  .  .  Func: -
+   650  .  .  .  .  .  .  .  .  .  .  Params: *ast.FieldList {
+   651  .  .  .  .  .  .  .  .  .  .  .  Opening: testdata/pet.spec.go:57:13
+   652  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
+   653  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
+   654  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
+   655  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: []*ast.Ident (len = 1) {
+   656  .  .  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Ident {
+   657  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:57:14
+   658  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "id"
+   659  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *ast.Object {
+   660  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Kind: var
+   661  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "id"
+   662  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Decl: *(obj @ 653)
+   663  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Data: nil
+   664  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: nil
+   665  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   666  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   667  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   668  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.Ident {
+   669  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:57:17
+   670  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "int64"
+   671  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: nil
+   672  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   673  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
+   674  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
+   675  .  .  .  .  .  .  .  .  .  .  .  .  }
+   676  .  .  .  .  .  .  .  .  .  .  .  }
+   677  .  .  .  .  .  .  .  .  .  .  .  Closing: testdata/pet.spec.go:57:22
+   678  .  .  .  .  .  .  .  .  .  .  }
+   679  .  .  .  .  .  .  .  .  .  .  Results: *ast.FieldList {
+   680  .  .  .  .  .  .  .  .  .  .  .  Opening: -
+   681  .  .  .  .  .  .  .  .  .  .  .  List: []*ast.Field (len = 1) {
+   682  .  .  .  .  .  .  .  .  .  .  .  .  0: *ast.Field {
+   683  .  .  .  .  .  .  .  .  .  .  .  .  .  Doc: nil
+   684  .  .  .  .  .  .  .  .  .  .  .  .  .  Names: nil
+   685  .  .  .  .  .  .  .  .  .  .  .  .  .  Type: *ast.ArrayType {
+   686  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Lbrack: testdata/pet.spec.go:57:24
+   687  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Len: nil
+   688  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Elt: *ast.Ident {
+   689  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  NamePos: testdata/pet.spec.go:57:26
+   690  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Name: "Pet"
+   691  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  Obj: *(obj @ 224)
+   692  .  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   693  .  .  .  .  .  .  .  .  .  .  .  .  .  }
+   694  .  .  .  .  .  .  .  .  .  .  .  .  .  Tag: nil
+   695  .  .  .  .  .  .  .  .  .  .  .  .  .  Comment: nil
+   696  .  .  .  .  .  .  .  .  .  .  .  .  }
+   697  .  .  .  .  .  .  .  .  .  .  .  }
+   698  .  .  .  .  .  .  .  .  .  .  .  Closing: -
+   699  .  .  .  .  .  .  .  .  .  .  }
+   700  .  .  .  .  .  .  .  .  .  }
+   701  .  .  .  .  .  .  .  .  .  Tag: nil
+   702  .  .  .  .  .  .  .  .  .  Comment: nil
+   703  .  .  .  .  .  .  .  .  }
+   704  .  .  .  .  .  .  .  }
+   705  .  .  .  .  .  .  .  Closing: testdata/pet.spec.go:58:1
+   706  .  .  .  .  .  .  }
+   707  .  .  .  .  .  .  Incomplete: false
+   708  .  .  .  .  .  }
+   709  .  .  .  .  .  Comment: nil
+   710  .  .  .  .  }
+   711  .  .  .  }
+   712  .  .  .  Rparen: -
+   713  .  .  }
+   714  .  }
+   715  .  Scope: *ast.Scope {
+   716  .  .  Outer: nil
+   717  .  .  Objects: map[string]*ast.Object (len = 6) {
+   718  .  .  .  "OpenAPISpec": *(obj @ 21)
+   719  .  .  .  "Error": *(obj @ 54)
+   720  .  .  .  "NewPet": *(obj @ 135)
+   721  .  .  .  "Pet": *(obj @ 224)
+   722  .  .  .  "FindPetsParams": *(obj @ 293)
+   723  .  .  .  "Interface": *(obj @ 378)
+   724  .  .  }
+   725  .  }
+   726  .  Imports: nil
+   727  .  Unresolved: []*ast.Ident (len = 9) {
+   728  .  .  0: *(obj @ 83)
+   729  .  .  1: *(obj @ 106)
+   730  .  .  2: *(obj @ 164)
+   731  .  .  3: *(obj @ 191)
+   732  .  .  4: *(obj @ 264)
+   733  .  .  5: *(obj @ 325)
+   734  .  .  6: *(obj @ 349)
+   735  .  .  7: *(obj @ 610)
+   736  .  .  8: *(obj @ 668)
+   737  .  }
+   738  .  Comments: []*ast.CommentGroup (len = 5) {
+   739  .  .  0: *ast.CommentGroup {
+   740  .  .  .  List: []*ast.Comment (len = 1) {
+   741  .  .  .  .  0: *ast.Comment {
+   742  .  .  .  .  .  Slash: testdata/pet.spec.go:1:1
+   743  .  .  .  .  .  Text: "// +build ignore"
+   744  .  .  .  .  }
+   745  .  .  .  }
+   746  .  .  }
+   747  .  .  1: *(obj @ 393)
+   748  .  .  2: *(obj @ 495)
+   749  .  .  3: *(obj @ 569)
+   750  .  .  4: *(obj @ 627)
+   751  .  }
+   752  }

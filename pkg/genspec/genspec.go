@@ -15,6 +15,7 @@
 package genspec
 
 import (
+	"context"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -26,7 +27,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/flynn/json5"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/iancoleman/strcase"
 	"github.com/pkg/errors"
@@ -143,34 +143,52 @@ func (g *Generator) generate(af *ast.File) {
 		for _, s := range gd.Specs {
 			vs, ok := s.(*ast.ValueSpec)
 			if ok {
-				g.importSpec(vs)
+				g.generateFromValueSpec(vs)
 			}
 			ts, ok := s.(*ast.TypeSpec)
 			if ok {
 				switch i := ts.Type.(type) {
 				case *ast.StructType:
-					g.generateComponent(ts, i)
+					g.generateFromStructType(ts, i)
 				case *ast.InterfaceType:
-					g.generatePaths(ts, i)
+					g.generateFromInterfaceType(ts, i)
 				}
 			}
 		}
 	}
 }
 
-func (g *Generator) importSpec(vs *ast.ValueSpec) {
-	if vs.Names == nil || vs.Names[0].Name != "OpenAPISpec" {
+func (g *Generator) generateFromValueSpec(vs *ast.ValueSpec) {
+	if vs.Names == nil || len(vs.Names) != 1 {
 		return
 	}
+	log.Println(vs.Names[0].Name)
+	switch vs.Names[0].Name {
+	case "OpenAPISpec":
+		g.fromOpenAPISpec(vs)
+	case "Auth":
+		g.fromAuth(vs)
+	}
+}
+
+func getBasicLitValue(vs *ast.ValueSpec) (string, bool) {
 	if vs.Values == nil || len(vs.Values) != 1 {
-		log.Panic("Invalid OpenAPISpec", vs.Values)
+		return "", false
 	}
 	bl, ok := vs.Values[0].(*ast.BasicLit)
 	if !ok {
-		log.Panic("Invalid OpenAPISpec", vs.Values)
+		return "", false
 	}
-	spec, err := strconv.Unquote(bl.Value)
+	str, err := strconv.Unquote(bl.Value)
 	if err != nil {
+		return "", false
+	}
+	return str, true
+}
+
+func (g *Generator) fromOpenAPISpec(vs *ast.ValueSpec) {
+	spec, ok := getBasicLitValue(vs)
+	if !ok {
 		log.Panic("Invalid OpenAPISpec", vs.Values)
 	}
 	t, err := openapi3.NewLoader().LoadFromData([]byte(spec))
@@ -185,7 +203,108 @@ func (g *Generator) importSpec(vs *ast.ValueSpec) {
 	g.spec = t
 }
 
-func (g *Generator) generateComponent(ts *ast.TypeSpec, s *ast.StructType) {
+func CSVMergeLines(src []string) []string {
+	dst := make([]string, len(src))
+	j := 0
+	for i := 0; i < len(src); i++ {
+		if i == 0 {
+			dst[j] = src[0]
+		} else if len(src[i]) > 0 && src[i][0] == ',' {
+			dst[j] = dst[j] + src[i]
+		} else {
+			j++
+			dst[j] = src[i]
+		}
+	}
+	return dst[:j+1]
+}
+
+func (g *Generator) fromAuth(vs *ast.ValueSpec) {
+	auth, ok := getBasicLitValue(vs)
+	if !ok {
+		log.Panic("Invalid fromAuth", vs.Values)
+	}
+	ss, err := GenerateSecuritySchemes(auth)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	secs := openapi3.SecurityRequirements{}
+	for k, v := range *ss {
+		flows := v.Value.Flows
+
+		sec := openapi3.SecurityRequirement{}
+		sec[k] = []string{}
+		if flows != nil {
+			flow := flows.AuthorizationCode
+			if flow == nil {
+				flow = flows.ClientCredentials
+			}
+			if flow == nil {
+				flow = flows.Implicit
+			}
+			if flow == nil {
+				flow = flows.Password
+			}
+			if flow != nil {
+				scopes := flow.Scopes
+				for scope := range scopes {
+					sec[k] = append(sec[k], scope)
+				}
+			}
+		}
+		secs = append(secs, sec)
+	}
+	g.spec.Components.SecuritySchemes = *ss
+	g.spec.Security = secs
+}
+
+func GenerateSecuritySchemes(text string) (*openapi3.SecuritySchemes, error) {
+	var obj interface{}
+	yaml.Unmarshal([]byte(text), &obj)
+
+	str, ok := obj.(string)
+	schemes := openapi3.SecuritySchemes{}
+	if ok {
+		_, schema, err := GenerateSecurityScheme(str)
+		if err != nil {
+			return nil, err
+		}
+		schemes["auth"] = &openapi3.SecuritySchemeRef{Value: schema}
+		return &schemes, nil
+	}
+
+	// ary, ok := obj.([]interface{})
+	// if ok {
+	// 	for index, i := range ary {
+	// 		str, ok := i.(string)
+	// 		if !ok {
+	// 			return nil, errors.Errorf("GenerateSecuritySchemes:UnkownType %v:%v", ary, index)
+	// 		}
+	// 		name, schema, err := GenerateSecurityScheme(str)
+	// 		if err != nil {
+	// 			return nil, errors.Errorf("GenerateSecuritySchemes:UnkownType %v:%v:%v", ary, index, err.Error())
+	// 		}
+	// 		schemes[name] = &openapi3.SecuritySchemeRef{Value: schema}
+	// 	}
+	// }
+
+	hash, ok := obj.(map[interface{}]interface{})
+	if ok {
+		for k, v := range hash {
+			name := fmt.Sprintf("%v", k)
+			_, schema, err := GenerateSecuritySchemeInterface(v)
+			if err != nil {
+				return nil, errors.Errorf("GenerateSecuritySchemes:UnkownType %v:%v:%v", obj, name, err.Error())
+			}
+			schemes[name] = &openapi3.SecuritySchemeRef{Value: schema}
+		}
+	}
+
+	return &schemes, nil
+}
+
+func (g *Generator) generateFromStructType(ts *ast.TypeSpec, s *ast.StructType) {
 	if ts.Name == nil {
 		log.Panicf("%+v", ts)
 	}
@@ -418,7 +537,7 @@ func ParseOpeDoc(doc string) *OpeDoc {
 	return nil
 }
 
-func (g *Generator) generatePaths(ts *ast.TypeSpec, i *ast.InterfaceType) {
+func (g *Generator) generateFromInterfaceType(ts *ast.TypeSpec, i *ast.InterfaceType) {
 	for _, m := range i.Methods.List {
 		name := m.Names[0].Name
 		opeDoc := ParseOpeDoc(m.Doc.Text())
@@ -468,56 +587,89 @@ func (g *Generator) generatePaths(ts *ast.TypeSpec, i *ast.InterfaceType) {
 	}
 }
 
-func ParseSecurityScheme(text string) (*openapi3.SecurityScheme, error) {
+func GenerateOAuth2Scheme(m map[interface{}]interface{}) (string, *openapi3.SecurityScheme, error) {
+	flows := KeyValue{}
+	flow := openapi3.OAuthFlow{}
+	for k, v := range m {
+		key := k.(string)
+		switch key {
+		case "flow":
+			flows[v.(string)] = &flow
+		case "authUrl", "authorizationUrl":
+			flow.AuthorizationURL = v.(string)
+		case "tokenUrl":
+			flow.TokenURL = v.(string)
+		case "refreshUrl":
+			flow.RefreshURL = v.(string)
+		case "scopes":
+			b, _ := yaml.Marshal(v)
+			yaml.Unmarshal(b, &flow.Scopes)
+			// flow.Scopes = v.(map[string]string)
+		}
+	}
+	b, err := yaml.Marshal(flows)
+	if err != nil {
+		return "", nil, err
+	}
+	ss := openapi3.SecurityScheme{
+		Type: "oauth2",
+	}
+	err = yaml.Unmarshal(b, &ss.Flows)
+	return "", &ss, err
+}
+
+func GenerateSecuritySchemeInterface(i interface{}) (string, *openapi3.SecurityScheme, error) {
+	str, ok := i.(string)
+	if ok {
+		return GenerateSecurityScheme(str)
+	}
+	m, ok := i.(map[interface{}]interface{})
+	if !ok {
+		return "", nil, errors.Errorf("Unknown type: %v", i)
+	}
+	b, err := yaml.Marshal(m)
+	if err != nil {
+		return "", nil, err
+	}
+	schema := openapi3.NewSecurityScheme()
+	err = yaml.Unmarshal(b, schema)
+	if err != nil {
+		return "", nil, err
+	}
+	err = schema.Validate(context.Background())
+	if err != nil {
+		return GenerateOAuth2Scheme(m)
+	}
+	return "", schema, nil
+}
+
+func GenerateSecurityScheme(text string) (string, *openapi3.SecurityScheme, error) {
 	cells, err := CSVSplit(text)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 	TrimSpaceAll(cells)
 
-	switch cells[0] {
+	kind := cells[0]
+	switch kind {
 	case "basic", "bearer":
-		s := openapi3.NewSecurityScheme().WithType("http").WithScheme(cells[0])
+		s := openapi3.NewSecurityScheme().WithType("http").WithScheme(kind)
 		if len(cells) > 1 {
 			s.WithBearerFormat(cells[1])
 		}
-		return s, nil
+		return kind, s, nil
 	case "jwt":
 		s := openapi3.NewJWTSecurityScheme()
-		return s, nil
+		return kind, s, nil
 	case "apiKey":
 		s := openapi3.NewSecurityScheme().WithType("apiKey").WithIn(cells[1]).WithName(cells[2])
-		return s, nil
+		return kind, s, nil
 	case "cookie", "query", "header":
-		s := openapi3.NewSecurityScheme().WithType("apiKey").WithIn(cells[0]).WithName(cells[1])
-		return s, nil
-	case "oauth2":
-		f := cells[1]
-		url := cells[2]
-		scopes := map[string]string{}
-		if len(cells) > 3 {
-			err := json5.Unmarshal([]byte(cells[3]), &scopes)
-			if err != nil {
-				return nil, err
-			}
-		}
-
-		flows := KeyValue{}
-		flow := &openapi3.OAuthFlow{
-			AuthorizationURL: url,
-		}
-		flows[f] = flow
-		if len(scopes) > 0 {
-			flow.Scopes = scopes
-		}
-
-		s := openapi3.NewSecurityScheme().WithType("oauth2")
-		s.Flows = &openapi3.OAuthFlows{}
-		err = Convert(&flows, &s.Flows)
-		return s, err
+		s := openapi3.NewSecurityScheme().WithType("apiKey").WithIn(kind).WithName(cells[1])
+		return kind, s, nil
 	case "oidc", "openIdConnect":
 		s := openapi3.NewOIDCSecurityScheme(cells[1])
-		return s, nil
+		return kind, s, nil
 	}
-	return nil, err
+	return "", nil, err
 }

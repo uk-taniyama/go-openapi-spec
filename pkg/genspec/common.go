@@ -30,6 +30,11 @@ import (
 
 type KeyValue map[string]interface{}
 
+func (kv KeyValue) ConvertFrom(m *map[interface{}]interface{}) {
+	raw := map[string]interface{}(kv)
+	convertMap(m, &raw)
+}
+
 func convertMap(m *map[interface{}]interface{}, kv *map[string]interface{}) {
 	for k, v := range *m {
 		s, ok := k.(string)

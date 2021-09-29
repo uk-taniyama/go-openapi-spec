@@ -17,7 +17,19 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 `
 
-const Security = "basic"
+const Auth = `
+auth: basic
+apiKey: header,X-XXX
+oidc: oidc,https://example.com/.well-known/openid-configuration
+oauth2:
+  flow: authorizationCode
+  authUrl: https://api.example.com/oauth2/authorize
+  tokenUrl: https://api.example.com/oauth2/token
+  refreshUrl: https://api.example.com/oauth2/refresh
+  scopes:
+    read_pets: read your pets
+    write_pets: modify pets in your account
+`
 
 type Error struct {
 	Code    int32

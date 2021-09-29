@@ -202,23 +202,121 @@ func MustJSONStringify(obj interface{}) string {
 	return string(b)
 }
 
-func TestParseSecurity(t *testing.T) {
+func TestGenerateSecurityScheme(t *testing.T) {
 	testdata := genspec.KeyValue{}
 	err := yaml.Unmarshal(testdataParseSecurity, &testdata)
 	require.NoError(t, err)
 	for key, v := range testdata {
 		value := v.(map[string]interface{})
 		in := value["in"].(string)
+		name := value["name"].(string)
 		out := value["out"].(map[string]interface{})
 		t.Run(key, func(t *testing.T) {
-			data, err := genspec.ParseSecurityScheme(in)
+			n, s, err := genspec.GenerateSecurityScheme(in)
 			require.NoError(t, err)
+			require.Equal(t, name, n)
 			require.Equal(
 				t,
 				MustJSONStringify(out),
-				MustJSONStringify(data),
+				MustJSONStringify(s),
 			)
 		})
+	}
+}
+
+func TestGenerateSecuritySchemes(t *testing.T) {
+	text := `
+basic: basic
+oauth3:
+  type: oauth2
+  flows:
+    authorizationCode:
+      authorizationUrl: 'https://api.example.com/oauth2/authorize'
+      refreshUrl: 'https://api.example.com/oauth2/refresh'
+      tokenUrl: 'https://api.example.com/oauth2/token'
+      scopes:
+        read_pets: read your pets
+        write_pets: modify pets in your account
+oauth2:
+  flow: authorizationCode
+  authUrl: https://api.example.com/oauth2/authorize
+  tokenUrl: https://api.example.com/oauth2/token
+  refreshUrl: https://api.example.com/oauth2/refresh
+  scopes:
+    read_pets: read your pets
+    write_pets: modify pets in your account
+`
+	s, err := genspec.GenerateSecuritySchemes(text)
+	require.NoError(t, err)
+	require.JSONEq(t, MustJSONStringify(s), `
+	{
+		"basic": {
+			"type": "http",
+			"scheme": "basic"
+		},
+		"oauth2": {
+		  "type": "oauth2",
+		  "flows": {
+			"authorizationCode": {
+			  "authorizationUrl": "https://api.example.com/oauth2/authorize",
+			  "tokenUrl": "https://api.example.com/oauth2/token",
+			  "refreshUrl": "https://api.example.com/oauth2/refresh",
+			  "scopes": {
+				"read_pets": "read your pets",
+				"write_pets": "modify pets in your account"
+			  }
+			}
+		  }
+		},
+		"oauth3": {
+		  "type": "oauth2",
+		  "flows": {
+			"authorizationCode": {
+			  "authorizationUrl": "https://api.example.com/oauth2/authorize",
+			  "tokenUrl": "https://api.example.com/oauth2/token",
+			  "refreshUrl": "https://api.example.com/oauth2/refresh",
+			  "scopes": {
+				"read_pets": "read your pets",
+				"write_pets": "modify pets in your account"
+			  }
+			}
+		  }
+		}
+	}
+	`)
+}
+
+func TestCSVMergeLines(t *testing.T) {
+	type caseT struct {
+		in  []string
+		out []string
+	}
+	cases := []caseT{
+		{
+			in:  []string{"A,B", ",C"},
+			out: []string{"A,B,C"},
+		},
+		{
+			in:  []string{"A,B", ",C", ",D"},
+			out: []string{"A,B,C,D"},
+		},
+		{
+			in:  []string{"A,B", ",C", ",D", "E"},
+			out: []string{"A,B,C,D", "E"},
+		},
+		{
+			in:  []string{"A,B", ",C", ",D", "E", ",F"},
+			out: []string{"A,B,C,D", "E,F"},
+		},
+		{
+			in:  []string{"", "A,B", ",C"},
+			out: []string{"", "A,B,C"},
+		},
+	}
+	for _, c := range cases {
+		src := c.in
+		dst := genspec.CSVMergeLines(src)
+		require.Equal(t, c.out, dst, c.in)
 	}
 }
 

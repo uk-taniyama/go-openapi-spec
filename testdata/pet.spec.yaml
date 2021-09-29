@@ -23,7 +23,7 @@ paths:
       operationId: FindPets
       parameters:
       - in: query
-        name: Tags
+        name: tags
         schema:
           items:
             format: '[a-z][A-Z]'
@@ -32,7 +32,7 @@ paths:
             type: string
           type: array
       - in: query
-        name: Limit
+        name: limit
         schema:
           format: int32
           type: integer
@@ -121,24 +121,24 @@ components:
   schemas:
     Error:
       properties:
-        Code:
+        code:
           format: int32
           type: integer
-        Message:
+        message:
           format: '[a-z][A-Z]'
           maxLength: 20
           minLength: 10
           type: string
       required:
-      - Code
-      - Message
+      - code
+      - message
       type: object
     FindPetsParams:
       properties:
-        Limit:
+        limit:
           format: int32
           type: integer
-        Tags:
+        tags:
           items:
             format: '[a-z][A-Z]'
             maxLength: 20
@@ -146,32 +146,60 @@ components:
             type: string
           type: array
       required:
-      - Tags
-      - Limit
+      - tags
+      - limit
       type: object
     NewPet:
       properties:
-        Name:
+        name:
           format: '[a-z][A-Z]'
           maxLength: 20
           minLength: 10
           type: string
-        Tag:
+        tag:
           format: '[a-z][A-Z]'
           maxLength: 20
           minLength: 10
           type: string
       required:
-      - Name
-      - Tag
+      - name
+      - tag
       type: object
     Pet:
       allOf:
       - $ref: '#/components/schemas/NewPet'
       - properties:
-          Id:
+          id:
             format: int64
             type: integer
         required:
-        - Id
+        - id
         type: object
+  securitySchemes:
+    apiKey:
+      in: header
+      name: X-XXX
+      type: apiKey
+    auth:
+      scheme: basic
+      type: http
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.example.com/oauth2/authorize
+          refreshUrl: https://api.example.com/oauth2/refresh
+          scopes:
+            read_pets: read your pets
+            write_pets: modify pets in your account
+          tokenUrl: https://api.example.com/oauth2/token
+      type: oauth2
+    oidc:
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+      type: openIdConnect
+security:
+- oidc: []
+- oauth2:
+  - write_pets
+  - read_pets
+- auth: []
+- apiKey: []

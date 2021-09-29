@@ -1,17 +1,20 @@
 basic:
   in: basic
+  name: basic
   out:
     type: http
     scheme: basic
 
 bearer:
   in: bearer
+  name: bearer
   out:
     type: http
     scheme: bearer
 
 jwt:
   in: jwt
+  name: jwt
   out:
     type: http
     scheme: bearer
@@ -19,6 +22,7 @@ jwt:
 
 apiKey:
   in: apiKey,cookie,X-API-KEY
+  name: apiKey
   out:
     type: apiKey
     in: cookie
@@ -26,6 +30,7 @@ apiKey:
 
 cookie:
   in: cookie,X-API-KEY
+  name: cookie
   out:
     type: apiKey
     in: cookie
@@ -33,6 +38,7 @@ cookie:
 
 header:
   in: header,X-API-KEY
+  name: header
   out:
     type: apiKey
     in: header
@@ -40,43 +46,14 @@ header:
 
 oidc:
   in: oidc,https://example.com/.well-known/openid-configuration
+  name: oidc
   out:
     type: openIdConnect
     openIdConnectUrl: https://example.com/.well-known/openid-configuration
 
 openIdConnect:
   in: openIdConnect,https://example.com/.well-known/openid-configuration
+  name: openIdConnect
   out:
     type: openIdConnect
     openIdConnectUrl: https://example.com/.well-known/openid-configuration
-
-authorizationCode:
-  in: oauth2,authorizationCode,https://api.example.com/oauth2/authorize,"{read_pets:'read your pets',write_pets:'modify pets in your account'}"
-  out:
-    type: oauth2
-    flows:
-      authorizationCode:
-        authorizationUrl: https://api.example.com/oauth2/authorize
-        scopes:
-          read_pets: read your pets
-          write_pets: modify pets in your account
-
-implicit:
-  in: oauth2,implicit,https://api.example.com/oauth2/authorize,"{read_pets:'read your pets',write_pets:'modify pets in your account'}"
-  out:
-    type: oauth2
-    flows:
-      implicit:
-        authorizationUrl: https://api.example.com/oauth2/authorize
-        scopes:
-          read_pets: read your pets
-          write_pets: modify pets in your account
-
-oauth2noscope:
-  in: oauth2,implicit,https://api.example.com/oauth2/authorize
-  out:
-    type: oauth2
-    flows:
-      implicit:
-        authorizationUrl: https://api.example.com/oauth2/authorize
-        scopes:
